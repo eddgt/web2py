@@ -32,7 +32,7 @@ response.menu = [
                  (T('Home'), False, URL('default', 'index'), []),
                  (T('Articulos'), False, URL('configmenu', 'articulos'), []),
                  (T('Usuarios'), False, URL('configmenu', 'usuarios'), []),
-                 (T('TestSendMail'), False, URL('configmenu', 'usuarios'), [])
+                 (T('TestSendMail'), False, URL('configmenu', 'enviaCorreo'), [])
               ]
 
 DEVELOPMENT_MENU = False

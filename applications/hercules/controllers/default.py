@@ -103,3 +103,7 @@ def enviaCorreo():
 def enviaSMS():
     import os
     os.system("wget -U firefox -O mail.log  http://172.168.1.8:13200/sendsms?username=televida\&password=voiceweb\&from=5028260\&smsc=claro\&dlr-mask=0\&coding=0\&mclass=1\&to=50254656344\&text=Alerta%20Activa%20:%20Revisar%20cdc_programacion%20existen%20registros%20en%20estado%20E%20.")
+
+def enviaSMS2():
+    import os
+    os.system("wget -U firefox -O sms2.log http://172.168.1.10:13200/sendsms?username=televida\&password=voiceweb\&from=42644194\&smsc=mymodem\&dlr-mask=0\&to=52364478\&text=Alarma%20Activa%20:%20Revisar%20cdc_programacion%20existen%20registros%20en%20estado%20E%20.")

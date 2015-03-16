@@ -23,7 +23,8 @@ response.google_analytics_id = None
 #########################################################################
 
 response.menu = [
-    (T('Home'), False, URL('default', 'index'), [])
+    (T('Home'), False, URL('default', 'index'), []),
+    (T('RevisarPacksFallidos'), False, URL('default', 'revisaFallidos'), [])
 ]
 
 DEVELOPMENT_MENU = True
@@ -136,4 +137,4 @@ def _():
          )]
 if DEVELOPMENT_MENU: _()
 
-if "auth" in locals(): auth.wikimenu() 
+if "auth" in locals(): auth.wikimenu()

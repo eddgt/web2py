@@ -106,4 +106,72 @@ def enviaSMS():
 
 def enviaSMS2():
     import os
-    os.system("wget -U firefox -O sms2.log http://172.168.1.10:13200/sendsms?username=televida\&password=voiceweb\&from=42644194\&smsc=mymodem\&dlr-mask=0\&to=54656344\&text=Alarma%20Activa%20:%20Revisar%20cdc_programacion%20existen%20registros%20en%20estado%20E%20.")
+    os.system("wget -U firefox -O sms2.log http://172.168.1.10:13200/sendsms?username=televida\&password=voiceweb\&from=42644194\&smsc=mymodem\&dlr-mask=0\&to=52364478\&text=Alarma%20Activa%20:%20Revisar%20cdc_programacion%20existen%20registros%20en%20estado%20E%20.")
+
+def  smsFallidos():
+    import os
+    os.system("wget -U firefox -O smsFallidos.log  http://172.168.1.8:13200/sendsms?username=televida\&password=voiceweb\&from=5028260\&smsc=claro\&dlr-mask=0\&coding=0\&mclass=1\&to=50254656344\&text=Alerta%20Activa%20:%Revisar%20be_http_request_response%20existen%20paquetes%20Fallidos!%20.")
+
+    """os.system("wget -U firefox -O smsFallidos.log http://172.168.1.10:13200/sendsms?username=televida\&password=voiceweb\&from=42644194\&smsc=mymodem\&dlr-mask=0\&to=54656344\&text='Alarma Activa -  Se encontraron paquetes fallids en be_http_request_response de Apolo'")"""
+
+def revisaFallidos():
+    archivo = open('/home/eddgt/Documentos/output_cron/alarmas/revisa_fallidos_beconnected.txt','r')
+    linea = archivo.read()
+
+    if linea == """\n0\n""":
+        return dict(mensaje="""Todo ok! en el archivo croneado /home/eddgt/Documentos/output_cron/alarmas/revisa_fallidos_beconnected.txt,\n
+                                Contenido en el archivo: """+linea)
+    else:
+        smsFallidos()
+        return dict(mensaje="""resultado archivo croneado /home/eddgt/Documentos/output_cron/alarmas/revisa_fallidos_beconnected.txt,\n
+                                Contenido en el archivo: """+linea)
+
+def sendReportDigicelSV():
+    import datetime
+    today = datetime.datetime.now()
+    dateFormat=today.strftime("%Y%m%d")
+    #reportToSend='TELEVIDA_'+dateFormat+'.zip'
+    reportToSend='reporte.zip'
+
+    lineas = len(open('/home/eddgt/Documentos/output_cron/reportes/claroni/reporte.csv').readlines())
+
+    if lineas>30000:
+        print "envio reporte, tiene "+str(lineas)+" lineas"
+
+        #mail parameters
+        mail.send(to=['edmundo_ulloa@hotmail.com'],
+        #mail.send(to=['Saribels.Sanjur@telefonica.com'],
+        subject='Test-Reporte usuarios activos Digicel',
+        # If reply_to is omitted, then mail.settings.sender is used
+        #cc=['edmundoulloa7@gmail.com','soporte247@televida.biz'],
+        #cc=['clientes.pa@televida.biz','scuchillas@televida.biz','msamayoa@televida.biz','dcamacho@televida.biz','soporte247@televida.biz'],
+        message='<html><body><p>Buen día <br> <br> Adjunto envío reporte "Usuarios activos Digicel " al dia de hoy  <br>  <br>Cualquier consulta estamos a la orden,<br> Atte, <br>  <br>Osman E. Ulloa <br>Soporte Regional Televida</p></body> </html>'+str(lineas),
+        attachments = mail.Attachment('/home/eddgt/Documentos/output_cron/reportes/claroni/'+reportToSend,
+                                   content_id='myreport'))
+        return dict(mensaje="""report sent with: """+str(lineas)+" lineas")
+    else:
+        return dict(mensaje="""report dont sent with: """+str(lineas)+" lineas "+str(today))
+    pass
+
+def sendReportKwClaroNi():
+        mail.send(to=['oulloa@televida.biz'],
+        #mail.send(to=[''],
+        subject='Test - Reporte Suscritos KW GANA - Claro NI',
+        cc=['soporte247@televida.biz'],
+        message='<html><body><p>Buen día <br> <br> Adjunto envío reporte "Estado de Usuarios suscritos por medio de KW GANA " correspondiente a la semana pasada generado el dia de hoy  <br>  <br>Cualquier consulta estamos a la orden,<br> Atte. <br>  <br>Osman E. Ulloa <br>Soporte Regional Televida</p></body> </html>',
+    attachments = mail.Attachment('/home/eddgt/Documentos/output_cron/reportes/claroni/reporteKwGanaSus239.csv',
+                                   content_id='myreport'))
+
+def sendReportActiveUsersMvstrSV():
+        mail.send(to=['edmundo_ulloa@hotmail.com'],
+        #mail.send(to=['josealberto.calderon@telefonica.com'],
+        subject='Reporte Suscritos Megapremios y Back To School',
+        cc=['edmundoulloa7@gmail.com'],
+        #cc=['mrodriguez@televida.biz', 'dsolombrino@televida.biz', 'cestrada@televida.biz', 'slima@televida.biz'],
+        message="""<html><body><p>Buen día <br> <br>Se envia el reporte solicitado de Numeros suscritos activos en Megapremios Movistar SV , Back to School Movistar SV y Suscritos en Ambos<br>  <br>Cualquier consulta estamos a la orden,<br> Atte. <br>  <br>Osman E. Ulloa <br>Soporte Regional Televida</p></body> </html>""",
+    attachments = mail.Attachment('/home/eddgt/Documentos/output_cron/reportes/movistarsv/reporteActivosMovistarSV.xlsx',
+                                   content_id='mvstrReport'))
+
+def myScheduler():
+    formulario =SQLFORM.smartgrid(db.scheduler_tasks)
+    return locals()

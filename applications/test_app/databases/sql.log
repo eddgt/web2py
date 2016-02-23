@@ -1,0 +1,159 @@
+timestamp: 2014-07-03T14:59:37.060397
+CREATE TABLE auth_user(
+    id INT AUTO_INCREMENT NOT NULL,
+    first_name VARCHAR(128),
+    last_name VARCHAR(128),
+    email VARCHAR(512),
+    password VARCHAR(512),
+    registration_key VARCHAR(512),
+    reset_password_key VARCHAR(512),
+    registration_id VARCHAR(512),
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2014-07-03T14:59:37.084296
+CREATE TABLE auth_group(
+    id INT AUTO_INCREMENT NOT NULL,
+    role VARCHAR(512),
+    description LONGTEXT,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2014-07-03T14:59:37.096426
+CREATE TABLE auth_membership(
+    id INT AUTO_INCREMENT NOT NULL,
+    user_id INT, INDEX user_id__idx (user_id), FOREIGN KEY (user_id) REFERENCES auth_user (id) ON DELETE CASCADE,
+    group_id INT, INDEX group_id__idx (group_id), FOREIGN KEY (group_id) REFERENCES auth_group (id) ON DELETE CASCADE,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2014-07-03T14:59:37.160513
+CREATE TABLE auth_permission(
+    id INT AUTO_INCREMENT NOT NULL,
+    group_id INT, INDEX group_id__idx (group_id), FOREIGN KEY (group_id) REFERENCES auth_group (id) ON DELETE CASCADE,
+    name VARCHAR(512),
+    table_name VARCHAR(512),
+    record_id INT,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2014-07-03T14:59:37.174453
+CREATE TABLE auth_event(
+    id INT AUTO_INCREMENT NOT NULL,
+    time_stamp DATETIME,
+    client_ip VARCHAR(512),
+    user_id INT, INDEX user_id__idx (user_id), FOREIGN KEY (user_id) REFERENCES auth_user (id) ON DELETE CASCADE,
+    origin VARCHAR(512),
+    description LONGTEXT,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2014-07-03T14:59:37.185239
+CREATE TABLE auth_cas(
+    id INT AUTO_INCREMENT NOT NULL,
+    user_id INT, INDEX user_id__idx (user_id), FOREIGN KEY (user_id) REFERENCES auth_user (id) ON DELETE CASCADE,
+    created_on DATETIME,
+    service VARCHAR(512),
+    ticket VARCHAR(512),
+    renew CHAR(1),
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2014-07-03T15:09:59.956103
+CREATE TABLE customer(
+    id INT AUTO_INCREMENT NOT NULL,
+    name VARCHAR(512),
+    taxpayer VARCHAR(512),
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2014-07-03T15:09:59.974870
+CREATE TABLE invoice(
+    id INT AUTO_INCREMENT NOT NULL,
+    created_on DATETIME,
+    created_by INT, INDEX created_by__idx (created_by), FOREIGN KEY (created_by) REFERENCES auth_user (id) ON DELETE CASCADE,
+    customer_id INT, INDEX customer_id__idx (customer_id), FOREIGN KEY (customer_id) REFERENCES customer (id) ON DELETE CASCADE,
+    description VARCHAR(512),
+    total DOUBLE,
+    payment VARCHAR(512),
+    status VARCHAR(512),
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2014-07-03T17:42:30.887073
+CREATE TABLE cliente(
+    id INT AUTO_INCREMENT NOT NULL,
+    nombre VARCHAR(512),
+    taxpayer VARCHAR(512),
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2014-07-03T17:42:30.919974
+CREATE TABLE factura(
+    id INT AUTO_INCREMENT NOT NULL,
+    creada_en DATETIME,
+    creada_por INT, INDEX creada_por__idx (creada_por), FOREIGN KEY (creada_por) REFERENCES auth_user (id) ON DELETE CASCADE,
+    cliente_id INT, INDEX cliente_id__idx (cliente_id), FOREIGN KEY (cliente_id) REFERENCES cliente (id) ON DELETE CASCADE,
+    descripcion VARCHAR(512),
+    total DOUBLE,
+    tipopago VARCHAR(512),
+    status VARCHAR(512),
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2014-07-03T17:51:54.552540
+CREATE TABLE concepto(
+    id INT AUTO_INCREMENT NOT NULL,
+    nombre VARCHAR(512),
+    descripcion VARCHAR(512),
+    cantidad DOUBLE,
+    medida VARCHAR(512),
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2014-07-03T17:51:54.575497
+ALTER TABLE cliente ADD contribuyente VARCHAR(512);
+success!
+timestamp: 2014-07-03T17:51:54.598736
+ALTER TABLE cliente DROP COLUMN taxpayer;
+success!
+timestamp: 2014-07-03T17:51:54.641214
+CREATE TABLE item(
+    id INT AUTO_INCREMENT NOT NULL,
+    factura_id INT, INDEX factura_id__idx (factura_id), FOREIGN KEY (factura_id) REFERENCES factura (id) ON DELETE CASCADE,
+    concepto_id INT, INDEX concepto_id__idx (concepto_id), FOREIGN KEY (concepto_id) REFERENCES concepto (id) ON DELETE CASCADE,
+    cantidad DOUBLE,
+    total DOUBLE,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2014-07-04T16:28:38.125252
+ALTER TABLE concepto ADD monto DOUBLE;
+success!
+timestamp: 2014-07-04T16:28:38.150743
+ALTER TABLE concepto DROP COLUMN cantidad;
+success!
+timestamp: 2014-07-04T16:33:28.723220
+ALTER TABLE item ADD monto DOUBLE;
+success!
+timestamp: 2014-07-04T16:33:28.783707
+ALTER TABLE item DROP COLUMN cantidad;
+success!
+timestamp: 2014-07-10T18:00:36.622593
+CREATE TABLE person(
+    id INT AUTO_INCREMENT NOT NULL,
+    name VARCHAR(512),
+    phone VARCHAR(512),
+    email VARCHAR(512),
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2014-07-10T18:00:36.674762
+CREATE TABLE favorite_music(
+    id INT AUTO_INCREMENT NOT NULL,
+    person INT, INDEX person__idx (person), FOREIGN KEY (person) REFERENCES person (id) ON DELETE CASCADE,
+    title VARCHAR(512),
+    artist VARCHAR(512),
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!

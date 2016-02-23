@@ -1,0 +1,13 @@
+{{extend 'layout.html'}}
+ {{from gluon.contrib.markdown import WIKI}}
+ <h1>{{=articulo.titulo}}</h1>
+ <h2>by {{=articulo.autor.first_name}}</h2>
+ {{=WIKI(articulo.texto)}}
+ <h2>Comentarios</h2>
+ {{for comentario in comentarios:}}
+   <blockquote>
+     {{=WIKI(comentario.texto)}}
+     <em>por {{=comentario.autor.first_name}}</em>
+   </blockquote>
+ {{ pass }}
+ {{=form}}

@@ -1,0 +1,37 @@
+# coding: utf8
+# intente algo como
+import MySQLdb
+import os
+
+def lookingFailed():
+    # Establecemos la conexion con la base de datos
+    bd = MySQLdb.connect("172.168.1.12","connect","c0nn3ct","codigos_suscripcion" )
+
+    # Preparamos el cursor que nos va a ayudar a realizar las operaciones con la base de datos
+    cursor = bd.cursor()
+
+    # Preparamos el query SQL para obtener todos los empleados de la BD
+    #sql = "SELECT count(id) totalFallidos FROM be_http_request_response where fecha_envio_paquete between curdate() and sysdate() and x_be_description not in('OK');"
+    sql = "SELECT count(celular) totalFallidos FROM test.soporte_carga_tmp;"
+    try:
+       # Ejecutamos el comando
+       cursor.execute(sql)
+       # Obtenemos todos los registros en una lista de listas
+       resultados = cursor.fetchall()
+       for registro in resultados:
+          regs = registro[0]
+          # Imprimimos los resultados obtenidos
+          #print "Total de fallidos encontrados =%s  " % (regs)
+          if int(regs)>40 :
+             return dict(mensaje="Total de fallidos encontrados =%s  " % regs)
+             #os.system("wget -U firefox -O smsFallidos.log  http://172.168.1.8:13200/sendsms?username=televida\&password=voiceweb\&from=5028260\&smsc=claro\&dlr-mask=0\&coding=0\&mclass=1\&to=50254656344\&text=Alerta%20Activa%20:%Revisarbe_http_request_response%20existen"+str(regs)+"paquetes%20Fallidos!%20.")
+
+          else:
+             return dict(mensaje="Fallidos encontrados =%s  "%regs)
+
+    except:
+       return dict(mensaje="Error: No se pudo obtener la data")
+
+    # Nos desconectamos de la base de datos
+    cursor.close()
+    bd.close()

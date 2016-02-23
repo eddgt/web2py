@@ -1,0 +1,21 @@
+(dp1
+S'output'
+p2
+S"<type 'exceptions.TypeError'> 'instancemethod' object does not support item assignment"
+p3
+sS'layer'
+p4
+S'/home/eddgt/public_html/web2py/web2py/applications/blog/controllers/configmenu.py'
+p5
+sS'code'
+p6
+S'# coding: utf8\n# intente algo como\ndef index(): return dict(message="hello from configmenu.py")\n\ndef articulos():\n    formulario =SQLFORM.smartgrid(db.articulo)\n    return locals()\n\ndef facts():\n    formulario =SQLFORM.smartgrid(db.factura)\n    return locals()\n\ndef usuarios():\n    formulario =SQLFORM.grid(db.auth_user)\n    return locals()\n\ndef enviaCorreo():\n#mail.send(\'oulloa@televida.biz\',\n# \'Asunto del mensaje\',\n#  \'<html><img src="cid:foto" /></html>\',\n#  attachments = mail.Attachment(\'/home/eddgt/IMG_03072014_163916.png\', content_id=\'foto\'))\n\n        mail.send(to=[\'edmundo_ulloa@hotmail.com\'],\n          subject=\'Test Mail function - Web2Py\',\n          # If reply_to is omitted, then mail.settings.sender is used\n          cc=[\'edmundoulloa7@gmail.com\'],\n          message=\'<html><body><p>Buen d\xc3\xada <br> <br> Adjunto les env\xc3\xado reporte "Base usuarios Recargamania Movistar PA 2014" al dia de hoy  <br>  <br> Saludos, <br>  <br>Osman E. Ulloa</p></body> </html>\',\n    #attachments = mail.Attachment(\'/home/eddgt/IMG_03072014_163916.png\', content_id=\'foto\')),\n    attachments = mail.Attachment(\'/home/eddgt/Documentos/output_cron/suscrip_157/reporte.zip\',\n                                   content_id=\'myreport\'))\n\nresponse._vars=response._caller(facts)\n'
+p7
+sS'snapshot'
+p8
+(dp9
+sS'traceback'
+p10
+S'Traceback (most recent call last):\n  File "/home/eddgt/public_html/web2py/web2py/gluon/restricted.py", line 220, in restricted\n    exec ccode in environment\n  File "/home/eddgt/public_html/web2py/web2py/applications/blog/controllers/configmenu.py", line 32, in <module>\n  File "/home/eddgt/public_html/web2py/web2py/gluon/globals.py", line 385, in <lambda>\n    self._caller = lambda f: f()\n  File "/home/eddgt/public_html/web2py/web2py/applications/blog/controllers/configmenu.py", line 10, in facts\n    formulario =SQLFORM.smartgrid(db.factura)\n  File "/home/eddgt/public_html/web2py/web2py/gluon/sqlhtml.py", line 2823, in smartgrid\n    user_signature=user_signature, **kwargs)\n  File "/home/eddgt/public_html/web2py/web2py/gluon/sqlhtml.py", line 2276, in grid\n    search_menu = SQLFORM.search_menu(sfields, prefix=prefix)\n  File "/home/eddgt/public_html/web2py/web2py/gluon/sqlhtml.py", line 1758, in search_menu\n    for k,v in field.requires.options()],\n  File "/home/eddgt/public_html/web2py/web2py/gluon/validators.py", line 575, in options\n    self.build_set()\n  File "/home/eddgt/public_html/web2py/web2py/gluon/validators.py", line 561, in build_set\n    records = self.dbset(table).select(*fields, **dd)\n  File "/home/eddgt/public_html/web2py/web2py/gluon/dal.py", line 10529, in select\n    return adapter.select(self.query,fields,attributes)\n  File "/home/eddgt/public_html/web2py/web2py/gluon/dal.py", line 2458, in select\n    return super(SQLiteAdapter, self).select(query, fields, attributes)\n  File "/home/eddgt/public_html/web2py/web2py/gluon/dal.py", line 1882, in select\n    return self._select_aux(sql,fields,attributes)\n  File "/home/eddgt/public_html/web2py/web2py/gluon/dal.py", line 1863, in _select_aux\n    return processor(rows,fields,self._colnames,cacheable=cacheable)\n  File "/home/eddgt/public_html/web2py/web2py/gluon/dal.py", line 2251, in parse\n    colset[fieldname] = value\nTypeError: \'instancemethod\' object does not support item assignment\n'
+p11
+s.

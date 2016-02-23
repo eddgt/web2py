@@ -182,3 +182,24 @@ def data():
       LOAD('default','data.load',args='tables',ajax=True,user_signature=True)
     """
     return dict(form=crud())
+
+
+#def person():
+ #   person = person = readonly = None
+#
+#    if not readonly:
+#    response.menu +=    (T('Home'), False, URL('default', 'report'), [])
+#
+#    else:
+#        form = SQLFORM(db.factura)
+#        redirect(URL(f="person","persons"))
+#        return dict(form=form)
+
+#implementacion de appreport plugin
+def report():
+    form = plugin_appreport.REPORTFORM(person)
+
+    if form.accepts(request.vars, session):
+        return plugin_appreport.REPORTPISA(table = person, title = 'List of persons', filter = dict(form.vars))
+
+    return dict(form = form)

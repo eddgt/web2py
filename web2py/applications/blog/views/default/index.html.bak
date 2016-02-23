@@ -1,4 +1,16 @@
-{{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
+{{extend 'layout.html'}}
+{{from gluon.contrib.markdown import WIKI}}
+<!---<h1>Artículos</h1>
+{{ for factura in facturas:}}
+   <h2>
+     <a
+         href="{{=URL(r=request,f='view_factura',args=factura.id)}}">
+       {{=factura.numero}}
+     </a>
+   </h2>
+   {{=WIKI(factura.autor)}}
+ {{ pass }}--->
+<!--{{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
 {{extend 'layout.html'}}
 
 {{if 'message' in globals():}}
@@ -33,3 +45,4 @@
   <li><a href="http://web2py.com/book">{{=T('Documentation')}}</a></li>
 </ul>
 {{end}}
+--->

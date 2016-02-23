@@ -3,5 +3,13 @@
 def index(): return dict(message="hello from cliente.py")
 
 def clientes():
-    formulario =SQLFORM.smartgrid(db.customer)
+    formulario =SQLFORM.smartgrid(db.cliente)
     return locals()
+
+#def report_form():
+#    form = plugin_appreport.REPORTFORM(table=db.cliente)
+#    return dict(form = form)
+
+def static_report_pisa():
+    static_html = '<html><body><h1>My first report</h1><table><tr><td>Hello world :P </td></tr><tr><td>using <strong>web2py-appreport</strong> with pisa engine</td></tr><table></body></html>'
+    return plugin_appreport.REPORTPISA(html=static_html)

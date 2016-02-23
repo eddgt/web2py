@@ -4,5 +4,5 @@ def index(): return dict(message="hello from factura.py")
 
 #declarar la funcion que se llamara desde el menu.py
 def facturas():
-    formulario =SQLFORM.smartgrid(db.factura)
+    formulario =SQLFORM.grid(db.factura)
     return locals()

@@ -101,6 +101,35 @@ def factura():
             redirect(URL(f="factura"))
     return dict(form=form)
 
+@auth.requires_login()
+def detalle():
+    """
+    The invoice details grid.
+
+    It exposes an invoice item CRUD interface and updates totals for
+    each submission. It requires a session invoice variable which
+    is set by user input (via the menu), so you cannot edit details
+    unless you selected an invoice previously.
+    """
+
+    if not session.factura_id:
+        # return an empty page if there's no invoice selected
+        response.flash = T("No invoice selected!")
+        return dict(header=None, details=None)
+    else:
+        # get the invoice database record
+        factura = db.factura[session.factura_id]
+        # update item and invoice totals (only open invoices)
+        factura_total(factura)
+        # is the invoice editable? then allow item CRUD.
+        editable = not factura.status in ("bloqueada", "cancelada")
+    detalle = SQLFORM.grid(db.item.factura_id==session.factura_id,
+        create=editable, editable=editable, deletable=editable)
+
+    # we add the invoice header to the action data for reference
+    header = SQLFORM(db.factura, session.factura_id, readonly=True)
+    return dict(header=header, detalle=detalle)
+
 def user():
     """
     exposes:
@@ -153,3 +182,24 @@ def data():
       LOAD('default','data.load',args='tables',ajax=True,user_signature=True)
     """
     return dict(form=crud())
+
+
+def person():
+    person = person = readonly = None
+    
+    if not readonly:
+    response.menu +=    (T('Home'), False, URL('default', 'report'), [])
+
+    else:
+        form = SQLFORM(db.factura)
+        redirect(URL(f="person","persons"))
+        return dict(form=form)
+
+#implementacion de appreport plugin
+def report():
+    form = plugin_appreport.REPORTFORM(person)
+
+    if form.accepts(request.vars, session):
+        return plugin_appreport.REPORTPISA(table = person, title = 'List of persons', filter = dict(form.vars))
+
+    return dict(form = form)

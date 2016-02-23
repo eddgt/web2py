@@ -24,6 +24,7 @@ response.google_analytics_id = None
 
 response.menu = [
     (T('Home'), False, URL('default', 'index'), []),
+    (T('Personas'), False, URL('person', 'persons'), []),
     (T('Clientes'), False, URL('cliente', 'clientes'), []),
     (T('Facturas'), False, URL('factura', 'facturas'), [])
 ]

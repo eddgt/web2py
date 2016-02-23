@@ -7,7 +7,7 @@
 
 ##response.logo = A(B('web',SPAN(2),'py'),XML('&trade;&nbsp;'),
  ##                 _class="brand",_href="http://www.web2py.com/")
-response.title = 'My Blog Application '#request.application.replace('_',' ').title()
+response.title = 'My Alarm/Reports Control Application '#request.application.replace('_',' ').title()
 response.subtitle = 'by eddgt - @OsmanGt1'
 
 ## read more at http://dev.w3.org/html5/markup/meta.name.html
@@ -31,7 +31,9 @@ response.menu = [
                 #('Index',  True,  URL('index'), []),
                  (T('Home'), False, URL('default', 'index'), []),
                  (T('Articulos'), False, URL('configmenu', 'articulos'), []),
-                 (T('Usuarios'), False, URL('configmenu', 'usuarios'), [])
+                 (T('Usuarios'), False, URL('configmenu', 'usuarios'), []),
+                 (T('Facturas'), False, URL('configmenu', 'facts'), [])
+                 #(T('TestSendMail'), False, URL('configmenu', 'enviaCorreo'), [])
               ]
 
 DEVELOPMENT_MENU = False

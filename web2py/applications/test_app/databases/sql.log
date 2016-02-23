@@ -139,3 +139,21 @@ success!
 timestamp: 2014-07-04T16:33:28.783707
 ALTER TABLE item DROP COLUMN cantidad;
 success!
+timestamp: 2014-07-10T18:00:36.622593
+CREATE TABLE person(
+    id INT AUTO_INCREMENT NOT NULL,
+    name VARCHAR(512),
+    phone VARCHAR(512),
+    email VARCHAR(512),
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2014-07-10T18:00:36.674762
+CREATE TABLE favorite_music(
+    id INT AUTO_INCREMENT NOT NULL,
+    person INT, INDEX person__idx (person), FOREIGN KEY (person) REFERENCES person (id) ON DELETE CASCADE,
+    title VARCHAR(512),
+    artist VARCHAR(512),
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!

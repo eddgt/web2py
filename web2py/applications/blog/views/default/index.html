@@ -1,15 +1,6 @@
 {{extend 'layout.html'}}
 {{from gluon.contrib.markdown import WIKI}}
-<h1>Artículos</h1>
-{{ for articulo in articulos:}}
-   <h2>
-     <a
-         href="{{=URL(r=request,f='view_post',args=articulo.id)}}">
-       {{=articulo.titulo}}
-     </a>
-   </h2>
-   {{=WIKI(articulo.texto)}}
- {{ pass }}
+
 <!--{{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
 {{extend 'layout.html'}}
 

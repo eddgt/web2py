@@ -1,0 +1,150 @@
+timestamp: 2015-04-21T10:55:11.671573
+CREATE TABLE auth_user(
+    id INT AUTO_INCREMENT NOT NULL,
+    first_name VARCHAR(128),
+    last_name VARCHAR(128),
+    email VARCHAR(512),
+    password VARCHAR(512),
+    registration_key VARCHAR(512),
+    reset_password_key VARCHAR(512),
+    registration_id VARCHAR(512),
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2015-04-21T10:55:11.771164
+CREATE TABLE auth_group(
+    id INT AUTO_INCREMENT NOT NULL,
+    role VARCHAR(512),
+    description LONGTEXT,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2015-04-21T10:55:11.793473
+CREATE TABLE auth_membership(
+    id INT AUTO_INCREMENT NOT NULL,
+    user_id INT, INDEX user_id__idx (user_id), FOREIGN KEY (user_id) REFERENCES auth_user (id) ON DELETE CASCADE,
+    group_id INT, INDEX group_id__idx (group_id), FOREIGN KEY (group_id) REFERENCES auth_group (id) ON DELETE CASCADE,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2015-04-21T10:55:11.876392
+CREATE TABLE auth_permission(
+    id INT AUTO_INCREMENT NOT NULL,
+    group_id INT, INDEX group_id__idx (group_id), FOREIGN KEY (group_id) REFERENCES auth_group (id) ON DELETE CASCADE,
+    name VARCHAR(512),
+    table_name VARCHAR(512),
+    record_id INT,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2015-04-21T10:55:11.900368
+CREATE TABLE auth_event(
+    id INT AUTO_INCREMENT NOT NULL,
+    time_stamp DATETIME,
+    client_ip VARCHAR(512),
+    user_id INT, INDEX user_id__idx (user_id), FOREIGN KEY (user_id) REFERENCES auth_user (id) ON DELETE CASCADE,
+    origin VARCHAR(512),
+    description LONGTEXT,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2015-04-21T10:55:11.932792
+CREATE TABLE auth_cas(
+    id INT AUTO_INCREMENT NOT NULL,
+    user_id INT, INDEX user_id__idx (user_id), FOREIGN KEY (user_id) REFERENCES auth_user (id) ON DELETE CASCADE,
+    created_on DATETIME,
+    service VARCHAR(512),
+    ticket VARCHAR(512),
+    renew CHAR(1),
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2015-04-21T10:57:51.486972
+CREATE TABLE articulo(
+    id INT AUTO_INCREMENT NOT NULL,
+    descripcion VARCHAR(512),
+    marca VARCHAR(512),
+    saldo DOUBLE,
+    precio DOUBLE,
+    medida VARCHAR(512),
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2015-04-21T10:57:51.569156
+CREATE TABLE movimiento(
+    id INT AUTO_INCREMENT NOT NULL,
+    creada_en DATETIME,
+    creada_por INT, INDEX creada_por__idx (creada_por), FOREIGN KEY (creada_por) REFERENCES auth_user (id) ON DELETE CASCADE,
+    descripcion VARCHAR(512),
+    total DOUBLE,
+    status VARCHAR(512),
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2015-04-21T10:57:51.589065
+CREATE TABLE detalle_movimiento(
+    id INT AUTO_INCREMENT NOT NULL,
+    movimiento_id INT, INDEX movimiento_id__idx (movimiento_id), FOREIGN KEY (movimiento_id) REFERENCES movimiento (id) ON DELETE CASCADE,
+    articulo_id INT, INDEX articulo_id__idx (articulo_id), FOREIGN KEY (articulo_id) REFERENCES articulo (id) ON DELETE CASCADE,
+    monto DOUBLE,
+    total DOUBLE,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2015-04-21T10:57:51.635716
+CREATE TABLE empleado(
+    id INT AUTO_INCREMENT NOT NULL,
+    nombre VARCHAR(512),
+    direccion VARCHAR(512),
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2015-04-21T14:05:26.594162
+ALTER TABLE empleado ADD nit VARCHAR(512);
+success!
+success!
+timestamp: 2015-04-21T16:50:27.357441
+ALTER TABLE movimiento ADD empleado_id INT, ADD INDEX empleado_id__idx (empleado_id), ADD FOREIGN KEY (empleado_id) REFERENCES empleado (id) ON DELETE CASCADE;
+success!
+success!
+timestamp: 2015-04-22T16:08:33.754169
+ALTER TABLE detalle_movimiento ADD cantidad DOUBLE;
+success!
+timestamp: 2015-04-22T16:08:33.850167
+ALTER TABLE detalle_movimiento DROP COLUMN monto;
+success!
+timestamp: 2015-04-27T12:52:37.494703
+CREATE TABLE equipo(
+    id INT AUTO_INCREMENT NOT NULL,
+    codigo VARCHAR(512),
+    descripcion VARCHAR(512),
+    marca VARCHAR(512),
+    modelo VARCHAR(512),
+    grupo VARCHAR(512),
+    serie VARCHAR(512),
+    anio VARCHAR(512),
+    transmision VARCHAR(512),
+    marca_motor VARCHAR(512),
+    modelo_motor VARCHAR(512),
+    serie_motor VARCHAR(512),
+    hp_motor VARCHAR(512),
+    cc_motor VARCHAR(512),
+    peso DOUBLE,
+    capacidad_tons DOUBLE,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2015-04-27T12:52:37.523992
+CREATE TABLE grupos(
+    id INT AUTO_INCREMENT NOT NULL,
+    descripcion VARCHAR(512),
+    uso VARCHAR(512),
+    PRIMARY KEY (id)
+) ENGINE=InnoDB CHARACTER SET utf8;
+success!
+timestamp: 2015-04-27T13:53:26.461058
+ALTER TABLE equipo ADD grupo_id INT, ADD INDEX grupo_id__idx (grupo_id), ADD FOREIGN KEY (grupo_id) REFERENCES grupos (id) ON DELETE CASCADE;
+success!
+timestamp: 2015-04-27T13:53:26.517070
+ALTER TABLE equipo DROP COLUMN grupo;
+success!

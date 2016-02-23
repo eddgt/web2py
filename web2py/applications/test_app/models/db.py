@@ -217,3 +217,20 @@ def factura_total(factura):
         item.update_record(total=item_total)
         total += item_total
     factura.update_record(total=total)
+
+#inicio implementacion appreport plugin
+person = db.define_table('person',
+    Field('name'),
+    Field('phone'),
+    Field('email'))
+
+person.name.requires = IS_NOT_EMPTY()
+person.email.requires = IS_NULL_OR(IS_EMAIL())
+
+favorite_music = db.define_table('favorite_music',
+    Field('person', person),
+    Field('title'),
+    Field('artist'))
+
+favorite_music.person.requires = IS_IN_DB(db, person.id, '%(name)s')
+favorite_music.title.requires = IS_NOT_EMPTY()

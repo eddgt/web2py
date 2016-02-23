@@ -1,0 +1,260 @@
+# -*- coding: utf-8 -*-
+# this file is released under public domain and you can use without limitations
+
+#########################################################################
+## This is a sample controller
+## - index is the default action of any application
+## - user is required for authentication and authorization
+## - download is for downloading files uploaded in the db (does streaming)
+## - call exposes all registered services (none by default)
+#########################################################################
+
+
+def index():
+    """
+    example action using the internationalization operator T and flash
+    rendered by views/default/index.html or views/generic.html
+
+    if you need a simple wiki simply replace the two lines below with:
+    return auth.wiki()
+    """
+    response.flash = T("Welcome to web2py!")
+    return dict(message=T('Hello World'))
+
+
+def user():
+    """
+    exposes:
+    http://..../[app]/default/user/login
+    http://..../[app]/default/user/logout
+    http://..../[app]/default/user/register
+    http://..../[app]/default/user/profile
+    http://..../[app]/default/user/retrieve_password
+    http://..../[app]/default/user/change_password
+    http://..../[app]/default/user/manage_users (requires membership in
+    use @auth.requires_login()
+        @auth.requires_membership('group name')
+        @auth.requires_permission('read','table name',record_id)
+    to decorate functions that need access control
+    """
+    return dict(form=auth())
+
+@cache.action()
+def download():
+    """
+    allows downloading of uploaded files
+    http://..../[app]/default/download/[filename]
+    """
+    return response.download(request, db)
+
+
+def call():
+    """
+    exposes services. for example:
+    http://..../[app]/default/call/jsonrpc
+    decorate with @services.jsonrpc the functions to expose
+    supports xml, json, xmlrpc, jsonrpc, amfrpc, rss, csv
+    """
+    return service()
+
+
+@auth.requires_signature()
+def data():
+    """
+    http://..../[app]/default/data/tables
+    http://..../[app]/default/data/create/[table]
+    http://..../[app]/default/data/read/[table]/[id]
+    http://..../[app]/default/data/update/[table]/[id]
+    http://..../[app]/default/data/delete/[table]/[id]
+    http://..../[app]/default/data/select/[table]
+    http://..../[app]/default/data/search/[table]
+    but URLs must be signed, i.e. linked with
+      A('table',_href=URL('data/tables',user_signature=True))
+    or with the signed load operator
+      LOAD('default','data.load',args='tables',ajax=True,user_signature=True)
+    """
+    return dict(form=crud())
+
+@auth.requires_login()
+def movimiento():
+    """ The invoice header action
+
+    It allows to create or modify an invoice header.
+    Locked or cancelled operations are not editable.
+    """
+    movimiento = empleado = readonly = None
+
+    # MOVIMIENTO_ID stores the currently selected MOVIMIENTO
+    if MOVIMIENTO_ID:
+        if request.args(1):
+            session.movimiento_id = request.args(1)
+        # get the invoice db record
+        movimiento = db.movimiento[session.movimiento_id]
+
+        # compute/update totals for each item and
+        # the invoice's total amount
+        if movimiento: movimiento_total(movimiento)
+
+        # was this invoice closed? then disable editing
+        readonly = movimiento.status in ("bloqueada", "cancelada")
+        form = SQLFORM(db.movimiento, session.movimiento_id,
+                       readonly=readonly)
+
+        # on invoice update disable editing too (you can keep
+        # updating by accessing the invoice header trough the menu)
+        if form.process().accepted:
+            response.flash = T("Realizado!")
+            form = SQLFORM(db.movimiento, session.movimiento_id,
+                           readonly=True)
+        else:
+            # here we add the cancel and close (lock) actions to
+            # the menu.
+            if not readonly:
+                response.menu += [
+                    (T("Close"), True, URL(f="status",
+                     args=["movimiento", session.movimiento_id,
+                           "status", "bloqueada"])),
+                    (T("Cancel"), True, URL(f="status",
+                     args=["movimiento", session.movimiento_id,
+                           "status", "cancelada"]))]
+    else:
+        # when there's no invoice informed (by session variable or
+        # action argument) we expose a create form
+        form = SQLFORM(db.movimiento)
+        if form.process().accepted:
+            session.movimiento_id = form.vars.id
+            session.flash = T("New Movimiento created")
+            # on sucess, self-redirect to allow editing
+            redirect(URL(f="movimiento"))
+    return dict(form=form)
+
+
+
+@auth.requires_login()
+def detalle():
+    """
+    The Movimiento details grid.
+
+    It exposes an Movimiento item CRUD interface and updates totals for
+    each submission. It requires a session invoice variable which
+    is set by user input (via the menu), so you cannot edit details
+    unless you selected an Movimiento previously.
+    """
+
+    if not session.movimiento_id:
+        # return an empty page if there's no invoice selected
+        response.flash = T("Ningun movimiento Seleccionado!")
+        return dict(header=None, details=None)
+    else:
+        # get the invoice database record
+        movimiento = db.movimiento[session.movimiento_id]
+        # update item and invoice totals (only open invoices)
+        movimiento_total(movimiento)
+        # is the invoice editable? then allow item CRUD.
+        editable = not movimiento.status in ("bloqueada", "cancelada")
+
+        # we add the invoice header to the action data for reference
+        header = SQLFORM(db.movimiento, session.movimiento_id, readonly=True)
+
+        detalle = SQLFORM.grid(db.detalle_movimiento.movimiento_id==session.movimiento_id,create=editable, editable=editable, deletable=editable)
+
+        #return dict(header=header)
+        #return dict(detalle=detalle)
+
+    return dict(header=header, detalle=detalle)
+
+
+    """
+    exposes:
+    http://..../[app]/default/user/login
+    http://..../[app]/default/user/logout
+    http://..../[app]/default/user/register
+    http://..../[app]/default/user/profile
+    http://..../[app]/default/user/retrieve_password
+    http://..../[app]/default/user/change_password
+    http://..../[app]/default/user/manage_users (requires membership in
+    use @auth.requires_login()
+        @auth.requires_membership('group name')
+        @auth.requires_permission('read','table name',record_id)
+    to decorate functions that need access control
+    """
+    return dict(form=auth())
+
+@cache.action()
+def download():
+    """
+    allows downloading of uploaded files
+    http://..../[app]/default/download/[filename]
+    """
+    return response.download(request, db)
+
+
+def call():
+    """
+    exposes services. for example:
+    http://..../[app]/default/call/jsonrpc
+    decorate with @services.jsonrpc the functions to expose
+    supports xml, json, xmlrpc, jsonrpc, amfrpc, rss, csv
+    """
+    return service()
+
+
+@auth.requires_signature()
+def data():
+    """
+    http://..../[app]/default/data/tables
+    http://..../[app]/default/data/create/[table]
+    http://..../[app]/default/data/read/[table]/[id]
+    http://..../[app]/default/data/update/[table]/[id]
+    http://..../[app]/default/data/delete/[table]/[id]
+    http://..../[app]/default/data/select/[table]
+    http://..../[app]/default/data/search/[table]
+    but URLs must be signed, i.e. linked with
+      A('table',_href=URL('data/tables',user_signature=True))
+    or with the signed load operator
+      LOAD('default','data.load',args='tables',ajax=True,user_signature=True)
+    """
+    return dict(form=crud())
+
+
+
+
+#inicia codigo para administrar users
+
+#@auth.requires_membership("admin") # uncomment to enable security 
+def list_users():
+    btn = lambda row: A("Edit", _href=URL('manage_user', args=row.auth_user.id))
+    db.auth_user.edit = Field.Virtual(btn)
+    rows = db(db.auth_user).select()
+    headers = ["ID", "Name", "Last Name", "Email", "Edit"]
+    fields = ['id', 'first_name', 'last_name', "email", "edit"]
+    table = TABLE(THEAD(TR(*[B(header) for header in headers])),
+                  TBODY(*[TR(*[TD(row[field]) for field in fields]) \
+                        for row in rows]))
+    table["_class"] = "table table-striped table-bordered table-condensed"
+    return dict(table=table)
+
+#@auth.requires_membership("admin") # uncomment to enable security 
+def manage_user():
+    user_id = request.args(0) or redirect(URL('list_users'))
+    form = SQLFORM(db.auth_user, user_id).process()
+    membership_panel = LOAD(request.controller,
+                            'manage_membership.html',
+                             args=[user_id],
+                             ajax=True)
+    return dict(form=form,membership_panel=membership_panel)
+
+#@auth.requires_membership("admin") # uncomment to enable security 
+def manage_membership():
+    user_id = request.args(0) or redirect(URL('list_users'))
+    db.auth_membership.user_id.default = int(user_id)
+    db.auth_membership.user_id.writable = False
+    form = SQLFORM.grid(db.auth_membership.user_id == user_id,
+                       args=[user_id],
+                       searchable=False,
+                       deletable=False,
+                       details=False,
+                       selectable=False,
+                       csv=False,
+                       user_signature=False)  # change to True in production
+    return form

@@ -24,6 +24,7 @@ response.google_analytics_id = None
 
 response.menu = [
     (T('Home'), False, URL('default', 'index'), []),
+    (T('Personas'), False, URL('person', 'persons'), []),
     (T('Clientes'), False, URL('cliente', 'clientes'), []),
     (T('Facturas'), False, URL('factura', 'facturas'), [])
 ]
@@ -36,7 +37,7 @@ if request.args(0) == "factura":
     FACTURA_ID = request.args(1)
 
 response.menu += [(T("Factura No. %(numero)s") % \
-                   dict(number=FACTURA_ID or 
+                   dict(numero=FACTURA_ID or 
                         "(%s)" % T("Crear")), True,
                         URL(c="default", f="factura")),
                   (T("detalle factura"), True,
